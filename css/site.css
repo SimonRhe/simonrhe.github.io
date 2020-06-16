@@ -1,150 +1,134 @@
 * {
-    
-    
-    
 }
 
 img.emoji {
-    height: 1em;
-    width: 1em;
-    margin: 0 .05em 0 .1em;
-    vertical-align: -0.1em;
- }
-
-
+	height: 1em;
+	width: 1em;
+	margin: 0 .05em 0 .1em;
+	vertical-align: -0.1em;
+}
 
 .pagegrid {
-    max-width: 1000px;
-  margin: auto;
-  /* box-shadow: 0 10px 20px grey; */
-  /* justify: center; */
-    display: grid;
-    grid-template-columns: 1fr 400px;
-    grid-template-rows: 30px auto auto;
-    grid-template-areas: "header header"
-                         "main sidebar"
-                         "footer footer";
-
+	max-width: 1000px;
+	margin: auto;
+	/* box-shadow: 0 10px 20px grey; */
+	/* justify: center; */
+	display: grid;
+	grid-template-columns: 1fr 400px;
+	grid-template-rows: 30px auto auto;
+	grid-template-areas: "header header" "main sidebar" "footer footer";
 }
 
 .post-grid {
-    width: 750px;
-  margin: auto;
-  /* box-shadow: 0 10px 20px grey; */
-  /* justify: center; */
-    display: grid;
+	width: 750px;
+	margin: auto;
+	display: grid;
 }
 
-h1,h2,h3 {
-    font-family: 'Noto Sans JP', sans-serif;
-    color: rgb(45, 55, 72);
+h1,
+h2,
+h3 {
+	font-family: 'Noto Sans JP', sans-serif;
+	color: rgb(45, 55, 72);
 }
 
 h1 {
-    font-size: 1.875rem;
+	font-size: 1.875rem;
 }
 
-
-p,li {
-    color: rgb(74, 85, 104);
-    font-family: 'Roboto', sans-serif;
-    font-size: 1.125rem;
-    line-height: 1.5;
-
+p,
+li {
+	color: rgb(74, 85, 104);
+	font-family: 'Roboto', sans-serif;
+	font-size: 1.125rem;
+	line-height: 1.5;
 }
-
-
 
 header {
-    grid-area: header;
-    /* background-color: pink; */
+	grid-area: header;
+	/* background-color: pink; */
 }
 
 aside {
-    grid-area: sidebar;
-    /* background-color: yellow; */
-    padding: 15px 15px 15px 60px;
+	grid-area: sidebar;
+	/* background-color: yellow; */
+	padding: 15px 15px 15px 60px;
 }
 
 main {
-    grid-area: main;
-    /* background-color: blueviolet; */
-    padding: 15px 60px 15px 15px;
-    border-right: 1px solid grey;
+	grid-area: main;
+	/* background-color: blueviolet; */
+	padding: 15px 60px 15px 15px;
+	border-right: 1px solid grey;
 }
 
 footer {
-    grid-area: footer;
-    /* background-color: chocolate; */
-    padding: 15px;
+	grid-area: footer;
+	/* background-color: chocolate; */
+	padding: 15px;
 }
 
 .article-tag {
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    color: rgb(100, 111, 129);
-    margin-bottom: 0;
+	text-transform: uppercase;
+	font-size: 0.75rem;
+	color: rgb(100, 111, 129);
+	margin-bottom: 0;
 }
 
 .article-tag a {
-    text-decoration-line: none;
-    color: rgb(45, 55, 72);
+	text-decoration-line: none;
+	color: rgb(45, 55, 72);
 }
 .article-title {
-    font-weight: bold;
-    font-size: 1.875rem;
-    margin-top: 0;
-    margin-bottom: 0;
-    
+	font-weight: bold;
+	font-size: 1.875rem;
+	margin-top: 0;
+	margin-bottom: 0;
 }
 
-
 .article-title a {
-
-    text-decoration-line: none;
-    color: rgb(45, 55, 72);
-
+	text-decoration-line: none;
+	color: rgb(45, 55, 72);
 }
 
 .article-title a:hover {
-    text-decoration-line: underline;
+	text-decoration-line: underline;
 }
 
 .article-excerpt {
-    margin-top: 10px;
-    margin-bottom: 0px;
+	margin-top: 10px;
+	margin-bottom: 0px;
 }
 
 .article-readmore {
-    margin-top: 0px;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
+	margin-top: 0px;
+	display: grid;
+	grid-template-columns: 1fr auto;
+	align-items: center;
 }
 
 .article-readmore-line {
-    height: 1px;
-    background-color: rgb(100, 111, 129);
+	height: 1px;
+	background-color: rgb(100, 111, 129);
 }
-
 
 .article-readmore-link {
-    margin-top: 0px;
-    border-style: solid;
-    border-color: rgb(100, 111, 129);
-    border-width: 1px;
-    padding: 10px;
-    font-family: 'Roboto', sans-serif;
-    font-size: 0.75rem;
+	margin-top: 0px;
+	border-style: solid;
+	border-color: rgb(100, 111, 129);
+	border-width: 1px;
+	padding: 10px;
+	font-family: 'Roboto', sans-serif;
+	font-size: 0.75rem;
 }
 .article-readmore-link:hover {
-    border-color: black;
+	border-color: black;
 }
 .article-readmore-link a {
-    text-decoration-line: none;
-    color: rgb(45, 55, 72);
+	text-decoration-line: none;
+	color: rgb(45, 55, 72);
 }
 .article-readmore-link a:hover {
-    text-decoration-line: underline;
-    color: black;
+	text-decoration-line: underline;
+	color: black;
 }
