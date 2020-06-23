@@ -1,0 +1,49 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+  <meta charset="utf-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1" /> 
+  <title>Why I chose static site generator Eleventy for my blog</title> 
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500&family=Roboto:wght@300&display=swap" rel="stylesheet"> 
+  <link rel="stylesheet" href="/css/site.css">
+</head> 
+<body> 
+
+    <div class="post-grid">
+
+<p><a href="/">← Back to home page</a></p>
+
+<h1>Why I chose static site generator Eleventy for my blog</h1>
+
+<h2>Why use a static site generator</h2>
+<!-- Excerpt Start -->
+<p>I had worked hard to master HTML, CSS and vanilla JavaScript, and so when the time came to set up my personal blog, I was looking for a tool that would give me 100% control over the blog’s code. I wanted a tool that would allow me to <strong>keep the code clean, simple and lightning fast</strong>, while helping me <strong>automate the more mundane tasks</strong>.</p>
+<!-- Excerpt End -->
+<p>Specifically, I wanted to automate:</p>
+<ul>
+<li>creating an HTML file for each blog post</li>
+<li>referencing the blog posts from the home page</li>
+<li>categorizing the posts using tags</li>
+<li>uploading the files to the server.</li>
+</ul>
+<p>My blog, for now at least, doesn’t need to access live databases, provide user sign in or other more advanced features, and so a <em>static site generator</em>—<strong>a piece of backend software that can combine text and Markdown files with HTML templates to produce static HTML pages</strong>—was what I needed.</p>
+<h2>Eleventy vs. other static site generators</h2>
+<p>There are many static site generators out there: <a href="https://gohugo.io/">Hugo</a>, <a href="https://nextjs.org/">Next.js</a>, <a href="https://jekyllrb.com/">Jekyll</a>, and <a href="https://www.gatsbyjs.org/">Gatsby</a> are the most popular. I ultimately settled on <a href="https://www.11ty.dev/">Eleventy</a>, an up-and-coming static site generator started in 2017, for three main reasons:</p>
+<ol>
+<li><img class="emoji" draggable="false" alt="👍" src="https://twemoji.maxcdn.com/v/13.0.0/72x72/1f44d.png"/> Eleventy gives me <strong>100% control over the resulting HTML</strong> code and does not bloat it with libraries and structures that my simple blog site will not use</li>
+<li><img class="emoji" draggable="false" alt="👍" src="https://twemoji.maxcdn.com/v/13.0.0/72x72/1f44d.png"/> Eleventy is <strong>written in JavaScript</strong>—a language I know well—and runs on Node.js, which allows me to customize it easily and use existing JavaScript libraries to generate HTML pages</li>
+<li><img class="emoji" draggable="false" alt="👍" src="https://twemoji.maxcdn.com/v/13.0.0/72x72/1f44d.png"/> Eleventy is <strong>simple</strong>, so I don’t have to learn a new framework just to get my site going.</li>
+</ol>
+<p>As I started using Eleventy, however, I realized that there are also a few drawbacks to using it:</p>
+<ul>
+<li><img class="emoji" draggable="false" alt="👎" src="https://twemoji.maxcdn.com/v/13.0.0/72x72/1f44e.png"/> There are relatively <strong>few existing templates</strong> that we can use when compared to other static site generators</li>
+<li><img class="emoji" draggable="false" alt="👎" src="https://twemoji.maxcdn.com/v/13.0.0/72x72/1f44e.png"/> The <strong>documentation is patchy</strong> at times and for some features, I found myself having to look at other people’s code on GitHub to figure out how Eleventy works.</li>
+</ul>
+<p>Nevertheless, although the learning curve was steeper than I expected, Eleventy does what it promises and it is easily extensible by using plugins made specifically for Eleventy, or calling JavaScript libraries.</p>
+<p>In future posts, I’ll run through how to set up a simple Eleventy site, and how to automatically upload it to your GitHub user page.</p>
+
+
+</div>
+
+</body> 
+</html>
