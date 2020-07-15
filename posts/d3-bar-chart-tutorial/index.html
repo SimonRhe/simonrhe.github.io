@@ -1,0 +1,162 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+  <meta charset="utf-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1" /> 
+  <title>Visualizing data with a bar chart: an introduction to D3.js</title> 
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500&family=Roboto:wght@300&display=swap"> 
+  <link rel="stylesheet" href="/css/site.css">
+</head> 
+<body> 
+
+    <div class="post-grid">
+
+<p><a href="/">← Back to home page</a></p>
+
+<h1>Visualizing data with a bar chart: an introduction to D3.js</h1>
+
+<!-- Excerpt Start -->
+<p>Bar charts are an excellent starting point to learn how to use the <strong>D3.js</strong> library. D3 stands for <em>Data-Driven Document</em>. This post outlines the steps required to build the first project required to earn the freeCodeCamp &quot;Visualize Data with a Bar Chart&quot; certification.</p>
+<!-- Excerpt End -->
+<p>The D3.js front-end library provides a great number of resources to process and display data in a graphic form directly in the browser using HTML, CSS and SVG, so that interactive and dynamic data visualization apps can easily be built.</p>
+<p>As part of its Data Visualization Certification, freeCodeCamp has an excellent <a href="https://www.freecodecamp.org/learn/data-visualization/data-visualization-with-d3/">step by step tutorial to get started with D3</a>. The first project required to earn the <a href="https://www.freecodecamp.org/learn/data-visualization/data-visualization-projects/visualize-data-with-a-bar-chart">&quot;Visualize Data with a Bar Chart&quot; certification</a> asks us to build a static bar chart of the U.S. GDP over time, using as a source a JSON file containing quarterly, seasonally-adjusted annual values. The end result looks like the CodePen snippet below. You can explore the full code in CodePen.</p>
+<iframe height="383" style="width: 100%;" scrolling="no" title="D3 Bar Chart Tutorial" src="https://codepen.io/SimonRhe/embed/preview/abdGzpX?height=383&theme-id=dark&default-tab=result" frameborder="no" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href='https://codepen.io/SimonRhe/pen/abdGzpX'>D3 Bar Chart Tutorial</a> by SimonRhe
+  (<a href='https://codepen.io/SimonRhe'>@SimonRhe</a>) on <a href='https://codepen.io'>CodePen</a>.
+</iframe>
+<p><img class="emoji" draggable="false" alt="📋" src="https://twemoji.maxcdn.com/v/13.0.0/72x72/1f4cb.png"/> <strong>Required:</strong></p>
+<ul>
+<li>Basic understanding of JavaScript, HTML, CSS and JSON</li>
+<li>A front-end development environment (you can use <a href="codepen.io">CodePen</a> or other online environments)</li>
+</ul>
+<h2>Step 1: Set up d3</h2>
+<p>As with any library, we first need to import the library in order to be able to use it in our code. For a front-end library, this is usually done by adding it to the <code>&lt;head&gt;</code> section of our HTML document as follows:</p>
+<pre><code>&lt;script src=&quot;https://d3js.org/d3.v5.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<p>On CodePen, this is done by going in the pen’s <em>Settings → JS → Add External Scripts/Pens</em> and adding the URL.</p>
+<p>D3 helps us generate HTML, CSS and SVG code. We will draw our bar chart on an <code>&lt;svg&gt;</code> (scalable vector graphic) element. We will put this element inside a <code>&lt;div&gt;</code> element (which we will need later for our tooltip), so that our HTML code will look like this:</p>
+<pre><code>&lt;div id=&quot;barchart-div&quot;&gt;
+  &lt;svg id=&quot;barchart-svg&quot;&gt;&lt;/svg&gt;
+&lt;/div&gt;
+</code></pre>
+<p>In our JavaScript code, let’s acquire a reference to these elements by using <code>d3.select</code>:</p>
+<pre><code>const div = d3.select('#barchart-div');
+const svg = d3.select('#barchart-svg');
+</code></pre>
+<p><img class="emoji" draggable="false" alt="⚠️" src="https://twemoji.maxcdn.com/v/13.0.0/72x72/26a0.png"/> Both elements <strong>must</strong> be obtained by using <code>d3.select</code> or other d3 methods, <strong>not</strong> <code>document.getElementById</code> or other document methods.</p>
+<p>In the code pen, you’ll also notice that we set a few constants and determine the height and width of our <code>&lt;svg&gt;</code> element.</p>
+<h2>Step 2: First understand, then process the data</h2>
+<p>It’s important to start by studying the data source and understanding how it is structured. For this project, the data source is a file called <code>GDP-data.json</code> that is structured like this:</p>
+<pre><code>{
+  &quot;name&quot;: &quot;Gross Domestic Product, 1 Decimal&quot;,
+  /* (other descriptive fields...) */
+  &quot;data&quot;: [
+    [&quot;1947-01-01&quot;, 243.1],
+    [&quot;1947-04-01&quot;, 246.3]
+    /** (total of 274 data points) **/
+    ]
+}
+</code></pre>
+<p>We see that when we import the JSON, the data will be stored in a field called <code>data</code>, which contains an array of arrays each containing one string for the date and one number for the GDP value.</p>
+<p>There are several ways to read the data from a file into a JavaScript object. We can use the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">Fetch API</a> and call the <code>.json()</code> method on the response.  Alternatively, D3 offers the <code>d3.json</code> method which saves a few steps. <code>d3.json</code> returns a JavaScript Promise to which we link a function which will be called once the Promise is fulfilled, in this case when the file has been loaded and parsed. We can also add a <code>catch</code> block to process any errors.</p>
+<p>In the code below, we first load and parse the JSON file, then reorganize it for readability using the <code>map</code> method so that each entry is an object instead of an array, and parse the supplied date string into a JavaScript date object using a function (see the code pen for the full code). Once this is done, we call the <code>generateGraph()</code> function which contains our code to draw the bar chart.</p>
+<pre><code>d3
+  .json(DATA_URL)
+  .then((jsondata) =&gt; {
+    dataset = jsondata.data.map((d) =&gt; {
+      return {
+        dateString: d[0],
+        gdpValue: d[1],
+        date: parseDate(d[0])
+      };
+    });
+    generateGraph(); // calls function to draw graph
+    })
+  .catch((error) =&gt; console.log('Error: ' + error));
+</code></pre>
+<h2>Step 3: Determine the domain of the data, the range of the display and build a scale function</h2>
+<p>D3 includes many types of scales, which are functions that are set up to transform input data into a value within a defined range that we can then use to determine where or how to visually present our data. <em><strong>D3 in Depth</strong></em> has an excellent article that explains the different <a href="https://www.d3indepth.com/scales/">types of scale functions</a>.</p>
+<p>Before we can build a scale, we need to know the domain of our data, that is, the smallest and largest value in our dataset.</p>
+<p>GDP values will be displayed on the vertical axis. Since we want our vertical axis to start at zero dollars (and not at the smallest GDP value), our domain will start at 0. To determine the largest GDP value in our dataset, we will use the <code>d3.max</code> function. Since GDP values are contained within objects we created for each datapoint, we need to access them using a callback function that returns the GDP value for any datapoint (d):</p>
+<pre><code>const maxGdpValue = d3.max(dataset, (d) =&gt; d.gdpValue);
+</code></pre>
+<p>The range (the extent of the output of our scale function) of the vertical scale in this case is the height of our SVG container minus any padding. Note that SVGs have their origin point (0, 0) in their top left corner, and so our vertical scale needs to be inverted with the largest value first if we want to display our bar chart in the standard way where the origin point is in the bottom left corner.</p>
+<p>For this project, the vertical scale displaying GDP will be a simple number-based linear scale. We create it using the <code>d3.scaleLinear</code> function:</p>
+<pre><code>const yScale = d3.scaleLinear().domain([ 0, maxGdpValue ]).range([ svgHeight - PADDING, PADDING ]);
+</code></pre>
+<p>Our horizontal scale will also be linear, however since our data consists of dates, we will use the <a href="https://github.com/d3/d3-scale/blob/v2.2.2/README.md#scaleUtc"><code>d3.scaleUtc</code></a> function.</p>
+<p><img class="emoji" draggable="false" alt="⚠️" src="https://twemoji.maxcdn.com/v/13.0.0/72x72/26a0.png"/> We could alternatively use the <code>d3.scaleTime</code> function, however this is tricky because it uses your local time zone and may end up changing the date due to daylight savings time. In this project, dates are parsed as UTC (Coordinated Universal Time) and the <code>d3.scaleUtc</code> function is used to avoid this.</p>
+<p>Since we need both the earliest and latest date, we will use the <code>d3.extent</code> function to determine our domain. This function returns an array containing the smallest and largest value for our data. Our range is simply the width of the SVG container minus padding:</p>
+<pre><code>const xScale = d3.scaleUtc().domain(d3.extent(dataset, (d) =&gt; d.date)).range([ PADDING, svgWidth - PADDING ]);
+</code></pre>
+<p>Our x- and y-axis scale functions are now set up to calculate the x position and height of each bar on our chart. The last thing we need to determine before we start drawing our bar chart is the width of each bar. This will be fixed: each bar will have the same width. We can therefore get this value by dividing the width of our SVG container minus padding on each side by number of datapoints in our dataset:</p>
+<pre><code>const barWidth = (svgWidth - PADDING * 2) / dataset.length;
+</code></pre>
+<h2>Step 4: Draw the bars</h2>
+<p>To draw the bars, we use d3’s <code>enter</code> and <code>append</code> methods, which will go through our entire dataset to draw a <code>&lt;rect&gt;</code> rectangle element for each datapoint. We determine our x value by calling our <code>xScale</code> function on the current datapoint date (<code>d.date</code>) and our y value by calling our <code>yScale</code> function on the current datapoint GDP value (<code>d.gdpValue</code>). Our bar width is always the same, however we need to calculate the height of each bar.</p>
+<pre><code>svg
+  .selectAll('rect')
+  .data(dataset)
+  .enter()
+  .append('rect')
+  .attr('class', 'bar')
+  .attr('x', (d, i) =&gt; xScale(d.date))
+  .attr('y', (d, i) =&gt; yScale(d.gdpValue))
+  .attr('width', barWidth)
+  .attr('height', (d, i) =&gt; svgHeight - PADDING - yScale(d.gdpValue));
+</code></pre>
+<p>Since we added the CSS class <code>bar</code> to each bar we drew, we can use CSS to change the appearance of the bars:</p>
+<pre><code>.bar {
+  fill: blue;
+}
+
+.bar:hover {
+  fill: yellow;
+}
+</code></pre>
+<h2>Step 5: Add the axes</h2>
+<p>D3 can automatically generate the code to draw both vertical and horizontal axes based on the scale functions for x and y that we defined earlier. The result is a <code>&lt;g&gt;</code> group element that contains <code>&lt;path&gt;</code>, <code>&lt;line&gt;</code> and <code>&lt;text&gt;</code> elements that are drawn on our SVG.</p>
+<p>We want our vertical axis to be on the left side, so we will use <code>d3.axisLeft</code> to generate our axis function. We will then append a <code>&lt;g&gt;</code> group to our SVG. Axes use the range of the scale they are created with, so our vertical axis will be correctly positioned vertically, but not horizontally. In practice, this means that horizontal padding is not taken into consideration and that we need to move the axis to the correct position using the translate function in the transform attribute. (This should be clear when looking at the code below!) We then use the <code>call</code> method to run our axis function, which generates the code for our axis.</p>
+<pre><code>const yAxis = d3.axisLeft(yScale);
+svg.append('g').attr('transform', 'translate(' + PADDING + ', 0)').attr('id', 'y-axis').call(yAxis);
+</code></pre>
+<p>We then repeat the same process for the horizontal axis. (Take a look at the code pen if needed.)</p>
+<p>There are lots of options for generating the axes— we could adjust the tick marks, how numbers are displayed, etc.— but we use the defaults in this project.</p>
+<h2>Step 6: Add the tooltip</h2>
+<p>There is an easy way to add a tooltip to elements on an SVG by using the <code>&lt;title&gt;</code> element, however the freeCodeCamp automated test requires that we use a slightly more complicated but more powerful method.</p>
+<p>We create a <code>&lt;div&gt;</code> element, which we will move, show and hide following cursor movements, and we will change its content according to which bar the cursor is hovering over.</p>
+<p>Early in our code, we create a <code>&lt;div&gt;</code> element and hide it by setting its opacity to 0:</p>
+<pre><code>let tooltip = div.append('div').attr('id', 'tooltip').style('opacity', 0);
+</code></pre>
+<p>We then need to add two event handlers to each bar element we drew. The handlers will:</p>
+<ul>
+<li>on <code>mouseover</code>: change the content of our tooltip to display the data for the bar the mouse is hovering over, to move the tooltip to the cursor position and unhide it</li>
+<li>on <code>mouseout</code>: hide the tooltip when the cursor leaves the bar.</li>
+</ul>
+<pre><code>.on('mouseover', (d, i) =&gt; {
+  let newHtml = d.dateString + '&lt;br&gt;&lt;strong&gt;$' + d.gdpValue + ' B&lt;/strong&gt;';
+  tooltip
+    .html(newHtml)
+    .attr('data-date', d.dateString) // for fCC test
+    .style('opacity', 0.9)
+    .style('left', d3.event.pageX + 10 + 'px')
+    .style('top', d3.event.pageY - 28 + 'px');
+})
+.on('mouseout', (d, i) =&gt; {
+  tooltip.style('opacity', 0);
+})
+</code></pre>
+<h2>Step 7: Additional steps to pass the freeCodeCamp test</h2>
+<p>Since freeCodeCamp uses automated testing, we need to help it locate and evaluate the elements we created. This is done by adding <code>id</code> tags to the axes, <code>id</code> and <code>data-date</code> tag to the tooltip, and <code>data-date</code> and <code>data-gdp</code> tags to each bar we draw. I suggest carefully going over the [list of requirements]((https://www.freecodecamp.org/learn/data-visualization/data-visualization-projects/visualize-data-with-a-bar-chart) on freeCodeCamp and adding any missing elements. If in doubt, take a look at the source code in the code pen.</p>
+<p>To add the freeCodeCamp’s automated test engine to your page, add this to the bottom of your HTML (or uncomment on the code pen):</p>
+<pre><code>&lt;script src=&quot;https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<p>Your bar chart should now pass the freeCodeCamp test!</p>
+<h2>Conclusion</h2>
+<p>Obviously, using D3 was more work than creating the same static graph using Excel, however this lays the foundation for creating live graphs as the data gets updated, or truly interactive graphs where the user can change how the data is displayed. <a href="observablehq.com">Observable</a> has stunning examples of what can be done with D3. Have fun!</p>
+
+
+</div>
+
+</body> 
+</html>
